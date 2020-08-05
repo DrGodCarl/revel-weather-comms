@@ -25,7 +25,6 @@ class DailyWeatherFetcherImpl(
         // group the data by the dates
         val dateToWeatherData =
             forecast.list.groupBy {
-                // TODO - double check that this is giving me the right dates for the timestamps
                 ZonedDateTime.ofInstant(Instant.ofEpochSecond(it.dt), ZoneId.of("America/Chicago")).toLocalDate()
             }
         // we only want forecasted dates - some data points are for "today"

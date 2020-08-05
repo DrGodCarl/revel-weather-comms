@@ -30,6 +30,7 @@ dependencies {
     testImplementation("io.mockk", "mockk", "1.10.0")
     testImplementation("io.kotest", "kotest-runner-junit5", "4.1.3")
     testImplementation("io.kotest", "kotest-property", "4.1.3")
+    testImplementation("com.squareup.retrofit2", "retrofit-mock", "2.7.2")
 }
 
 tasks {
