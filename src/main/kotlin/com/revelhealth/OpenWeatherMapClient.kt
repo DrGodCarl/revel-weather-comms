@@ -3,7 +3,6 @@ package com.revelhealth
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.math.BigDecimal
 
 interface OpenWeatherMapClient {
 
@@ -17,14 +16,15 @@ interface OpenWeatherMapClient {
 }
 
 data class MainDetails(
-    val temp: BigDecimal
+    val temp: Double
 )
 
 data class WeatherDetails(
-    val id: Int
+    val main: String
 )
 
 data class WeatherData(
+    // TODO - rename dt and figure out gson annotation stuff
     val dt: Long,
     val main: MainDetails,
     val weather: List<WeatherDetails>
