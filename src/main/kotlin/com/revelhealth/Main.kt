@@ -1,14 +1,34 @@
 package com.revelhealth
 
+import com.natpryce.onFailure
+import com.revelhealth.weather.DailyWeatherFetcherImpl
+import com.revelhealth.comms.ForecastingCommunicationChannelDeterminationService
+import com.revelhealth.comms.WeatherCommunicationChannelDeterminationService
+import com.revelhealth.retrofit.OpenWeatherMapClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-// TODO - reorganize the project now that I have a better understanding of the problem
 fun main(args: Array<String>) {
     val results = determinationService().determineNextFiveDays()
-    results.forEach {
+    results.onFailure {
+        println("Something went wrong: ${it.reason.message}")
+        return
+    }.forEach {
         println("${it.date} - ${it.communicationChannel}")
     }
+}
+
+// This essentially builds the dependency graph of the project by hand.
+// If the project were to grow, I'd look into a DI framework for it.
+private fun determinationService(): ForecastingCommunicationChannelDeterminationService {
+    return ForecastingCommunicationChannelDeterminationService(
+        dailyWeatherFetcher(),
+        weatherCommunicationChannelDeterminationService()
+    )
+}
+
+private fun dailyWeatherFetcher(): DailyWeatherFetcherImpl {
+    return DailyWeatherFetcherImpl(weatherClient())
 }
 
 private fun weatherClient(): OpenWeatherMapClient {
@@ -17,17 +37,6 @@ private fun weatherClient(): OpenWeatherMapClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     return retrofit.create(OpenWeatherMapClient::class.java)
-}
-
-private fun determinationService(): ForecastingCommunicationChannelDeterminationService {
-    return ForecastingCommunicationChannelDeterminationService(
-        dailyWeatherFetcher(),
-        weatherCommunicationChannelDeterminationService()
-    )
-}
-
-private fun dailyWeatherFetcher(): DailyWeatherFetcher {
-    return DailyWeatherFetcher(weatherClient())
 }
 
 private fun weatherCommunicationChannelDeterminationService(): WeatherCommunicationChannelDeterminationService {

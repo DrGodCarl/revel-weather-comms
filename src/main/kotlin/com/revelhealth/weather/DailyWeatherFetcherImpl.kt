@@ -1,15 +1,20 @@
-package com.revelhealth
+package com.revelhealth.weather
 
 import com.natpryce.*
+import com.revelhealth.domain.WeatherDetail
+import com.revelhealth.domain.WeatherCondition
+import com.revelhealth.retrofit.OpenWeatherMapClient
+import com.revelhealth.retrofit.WeatherData
 import com.revelhealth.retrofit.network
+import com.revelhealth.util.maybeGet
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-class DailyWeatherFetcher(private val weatherClient: OpenWeatherMapClient) {
+class DailyWeatherFetcherImpl(private val weatherClient: OpenWeatherMapClient) : DailyWeatherFetcher {
 
-    fun getWeatherForecast(): Result<List<WeatherDetailByDay>, RuntimeException> {
+    override fun getWeatherForecast(): Result<List<WeatherDetailByDay>, RuntimeException> {
         // get the forecast, but bail early if there are network problems.
         val forecast = network { weatherClient.forecast() }.onFailure { return it }
         // group the data by the dates
@@ -51,31 +56,4 @@ class DailyWeatherFetcher(private val weatherClient: OpenWeatherMapClient) {
         )
     }
 
-}
-
-/**
- * Result-safe way to unwrap a value from a map
- */
-private fun <K, V, E> Map<K, V>.maybeGet(key: K, error: () -> E): Result<V, E> {
-    return this[key]?.let { Success(it) } ?: Failure(error())
-}
-
-/**
- * A special case of the above.
- */
-private fun <K, V> Map<K, V>.maybeGet(key: K): Result<V, RuntimeException> {
-    return this.maybeGet(key) { RuntimeException("They key $key was missing from the map.") }
-}
-
-data class WeatherDetailByDay(
-    val date: LocalDate,
-    override val temperature: Double,
-    override val weatherCondition: WeatherCondition
-) : WeatherDetail
-
-enum class WeatherCondition {
-    Rain,
-
-    // consider adding more as they become relevant
-    Other
 }
