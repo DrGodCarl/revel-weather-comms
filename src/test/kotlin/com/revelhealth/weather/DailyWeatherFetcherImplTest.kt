@@ -69,7 +69,7 @@ internal class DailyWeatherFetcherImplTest : StringSpec({
 private fun forecast(days: Long = 5L): List<WeatherData> {
     return (1L..days).map { LocalDateTime.now().plusDays(it).toEpochSecond(ZoneOffset.UTC) }.map {
         WeatherData(
-            dt = it,
+            secondsSinceEpoch = it,
             main = MainDetails(
                 temp = 10.0
             ),

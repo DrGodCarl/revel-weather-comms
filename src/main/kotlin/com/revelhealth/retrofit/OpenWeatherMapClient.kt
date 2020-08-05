@@ -1,5 +1,6 @@
 package com.revelhealth.retrofit
 
+import com.google.gson.annotations.SerializedName
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -25,8 +26,8 @@ data class WeatherDetails(
 )
 
 data class WeatherData(
-    // TODO - rename dt and figure out gson annotation stuff
-    val dt: Long,
+    @SerializedName("dt")
+    val secondsSinceEpoch: Long,
     val main: MainDetails,
     val weather: List<WeatherDetails>
 )

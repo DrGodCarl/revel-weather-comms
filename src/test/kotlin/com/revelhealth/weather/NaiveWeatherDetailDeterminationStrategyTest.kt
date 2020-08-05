@@ -49,7 +49,7 @@ internal class NaiveWeatherDetailDeterminationStrategyTest : StringSpec({
 }
 
 private fun weatherDataForTemp(temp: Double) = WeatherData(
-    dt = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
+    secondsSinceEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
     main = MainDetails(
         temp = temp
     ),
@@ -58,7 +58,7 @@ private fun weatherDataForTemp(temp: Double) = WeatherData(
 
 
 private fun weatherDataForCondition(weather: String) = WeatherData(
-    dt = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
+    secondsSinceEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
     main = MainDetails(
         temp = 10.0
     ),
