@@ -6,7 +6,7 @@ import com.revelhealth.domain.WeatherDetail
 import java.time.LocalDate
 
 interface DailyWeatherFetcher {
-    fun getWeatherForecast(): Result<List<WeatherDetailByDay>, RuntimeException>
+    fun getFiveDayForecast(): Result<List<WeatherDetailByDay>, RuntimeException>
 }
 
 data class WeatherDetailByDay(

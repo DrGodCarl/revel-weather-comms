@@ -10,6 +10,7 @@ interface OpenWeatherMapClient {
     fun forecast(
         @Query("q") query: String = "minneapolis,us",
         @Query("units") units: String = "imperial",
+        // TODO - the app id is probably ~secret~ so it shouldn't be in the code
         @Query("APPID") appId: String = "09110e603c1d5c272f94f64305c09436"
     ): Call<ForecastDataWrapper>
 

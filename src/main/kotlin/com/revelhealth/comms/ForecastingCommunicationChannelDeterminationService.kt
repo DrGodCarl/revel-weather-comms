@@ -13,7 +13,7 @@ class ForecastingCommunicationChannelDeterminationService(
 ) {
 
     fun determineNextFiveDays(): Result<List<CommunicationChannelByDate>, RuntimeException> {
-        return dailyWeatherFetcher.getWeatherForecast().map { forecast ->
+        return dailyWeatherFetcher.getFiveDayForecast().map { forecast ->
             forecast
                 .map {
                     CommunicationChannelByDate(

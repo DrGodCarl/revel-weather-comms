@@ -14,7 +14,7 @@ import java.time.ZonedDateTime
 
 class DailyWeatherFetcherImpl(private val weatherClient: OpenWeatherMapClient) : DailyWeatherFetcher {
 
-    override fun getWeatherForecast(): Result<List<WeatherDetailByDay>, RuntimeException> {
+    override fun getFiveDayForecast(): Result<List<WeatherDetailByDay>, RuntimeException> {
         // get the forecast, but bail early if there are network problems.
         val forecast = network { weatherClient.forecast() }.onFailure { return it }
         // group the data by the dates

@@ -1,4 +1,5 @@
 plugins {
+    java
     application
     kotlin("jvm") version "1.3.72"
 }
@@ -16,21 +17,46 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    implementation("com.squareup.retrofit2", "retrofit", "2.9.0")
-    implementation("com.squareup.retrofit2", "converter-gson", "2.9.0")
+    // using an old version of retrofit because:
+    //  - current version has warnings that spew out unless on java 14
+    //  - I'm not using any features that 2.8.0+ offers
+    implementation("com.squareup.retrofit2", "retrofit", "2.7.2")
+    implementation("com.squareup.retrofit2", "converter-gson", "2.7.2")
     implementation("com.natpryce", "result4k", "2.0.0")
-    testImplementation("junit", "junit", "4.12")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testImplementation("io.mockk", "mockk", "1.10.0")
+    testImplementation("io.kotest", "kotest-runner-junit5", "4.1.3")
+    testImplementation("io.kotest", "kotest-property", "4.1.3")
 }
 
-val jar by tasks.getting(Jar::class) {
-    manifest {
-        attributes["Main-Class"] = "com.revelhealth.MainKt"
+tasks {
+    test {
+        useJUnitPlatform()
     }
 
-    from(sourceSets.main.get().output)
+    jar {
+        manifest {
+            attributes["Main-Class"] = "com.revelhealth.MainKt"
+        }
 
-    dependsOn(configurations.runtimeClasspath)
-    from({
-        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
-    })
+        from(sourceSets.main.get().output)
+
+        dependsOn(configurations.runtimeClasspath)
+        from({
+            configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+        })
+    }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).all {
+    sourceCompatibility = JavaVersion.VERSION_11.toString()
+    targetCompatibility = JavaVersion.VERSION_11.toString()
+
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+
 }
