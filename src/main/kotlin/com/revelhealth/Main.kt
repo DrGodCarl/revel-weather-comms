@@ -1,10 +1,12 @@
 package com.revelhealth
 
 import com.natpryce.onFailure
-import com.revelhealth.weather.DailyWeatherFetcherImpl
 import com.revelhealth.comms.ForecastingCommunicationChannelDeterminationService
 import com.revelhealth.comms.WeatherCommunicationChannelDeterminationService
 import com.revelhealth.retrofit.OpenWeatherMapClient
+import com.revelhealth.weather.DailyWeatherFetcherImpl
+import com.revelhealth.weather.NaiveWeatherDetailDeterminationStrategy
+import com.revelhealth.weather.WeatherDetailDeterminationStrategy
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -28,7 +30,10 @@ private fun determinationService(): ForecastingCommunicationChannelDetermination
 }
 
 private fun dailyWeatherFetcher(): DailyWeatherFetcherImpl {
-    return DailyWeatherFetcherImpl(weatherClient())
+    return DailyWeatherFetcherImpl(
+        weatherClient(),
+        weatherDetailDeterminationStrategy()
+    )
 }
 
 private fun weatherClient(): OpenWeatherMapClient {
@@ -41,4 +46,8 @@ private fun weatherClient(): OpenWeatherMapClient {
 
 private fun weatherCommunicationChannelDeterminationService(): WeatherCommunicationChannelDeterminationService {
     return WeatherCommunicationChannelDeterminationService()
+}
+
+private fun weatherDetailDeterminationStrategy(): WeatherDetailDeterminationStrategy {
+    return NaiveWeatherDetailDeterminationStrategy()
 }

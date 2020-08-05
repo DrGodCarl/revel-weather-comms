@@ -1,7 +1,9 @@
 package com.revelhealth.weather
 
-import com.natpryce.*
-import com.revelhealth.domain.WeatherDetail
+import com.natpryce.Result
+import com.natpryce.allValues
+import com.natpryce.map
+import com.natpryce.onFailure
 import com.revelhealth.domain.WeatherCondition
 import com.revelhealth.retrofit.OpenWeatherMapClient
 import com.revelhealth.retrofit.WeatherData
@@ -12,7 +14,10 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-class DailyWeatherFetcherImpl(private val weatherClient: OpenWeatherMapClient) : DailyWeatherFetcher {
+class DailyWeatherFetcherImpl(
+    private val weatherClient: OpenWeatherMapClient,
+    private val strategy: WeatherDetailDeterminationStrategy
+) : DailyWeatherFetcher {
 
     override fun getFiveDayForecast(): Result<List<WeatherDetailByDay>, RuntimeException> {
         // get the forecast, but bail early if there are network problems.
@@ -28,32 +33,11 @@ class DailyWeatherFetcherImpl(private val weatherClient: OpenWeatherMapClient) :
         return forecastDates.map { date ->
             // the `maybeGet` should _never_ fail, but if it does we'll have something to go off of
             dateToWeatherData.maybeGet(date).map {
-                determineWeatherDetails(
+                strategy.determineWeatherDetails(
                     date, it
                 )
             }
         }.allValues()
-    }
-
-    private fun determineWeatherDetails(date: LocalDate, dataPoints: List<WeatherData>): WeatherDetailByDay {
-        // no day is a single temperature. This is naive and best-effort.
-        val averageTemp = dataPoints.map { it.main.temp }.average()
-        // no day is a single weather condition. This is naive and best-effort.
-        // It may be that we want to call it rainy when some threshold is met instead.
-        val mostCommonWeather = dataPoints
-            .flatMap { it.weather }
-            .map { it.main }
-            .groupingBy { it }
-            .eachCount()
-            .maxBy { it.value }
-            ?.key
-        val weather = WeatherCondition.Rain.takeIf { mostCommonWeather == "Rain" }
-            ?: WeatherCondition.Other
-        return WeatherDetailByDay(
-            date = date,
-            temperature = averageTemp,
-            weatherCondition = weather
-        )
     }
 
 }
