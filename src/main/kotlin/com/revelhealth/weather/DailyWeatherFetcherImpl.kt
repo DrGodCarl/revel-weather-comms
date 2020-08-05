@@ -4,13 +4,10 @@ import com.natpryce.Result
 import com.natpryce.allValues
 import com.natpryce.map
 import com.natpryce.onFailure
-import com.revelhealth.domain.WeatherCondition
 import com.revelhealth.retrofit.OpenWeatherMapClient
-import com.revelhealth.retrofit.WeatherData
 import com.revelhealth.retrofit.network
 import com.revelhealth.util.maybeGet
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 

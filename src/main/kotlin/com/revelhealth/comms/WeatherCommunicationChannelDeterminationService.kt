@@ -1,8 +1,8 @@
 package com.revelhealth.comms
 
-import com.revelhealth.domain.WeatherDetail
 import com.revelhealth.domain.CommunicationChannel
 import com.revelhealth.domain.WeatherCondition
+import com.revelhealth.domain.WeatherDetail
 
 
 class WeatherCommunicationChannelDeterminationService : CommunicationChannelDeterminationService<WeatherDetail> {

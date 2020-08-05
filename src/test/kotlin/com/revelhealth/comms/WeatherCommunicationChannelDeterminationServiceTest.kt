@@ -5,11 +5,9 @@ import com.revelhealth.domain.WeatherCondition
 import com.revelhealth.domain.WeatherDetail
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.property.forAll
-import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
-import io.kotest.property.arbitrary.double
 import io.kotest.property.arbitrary.numericDoubles
+import io.kotest.property.forAll
 
 internal class WeatherCommunicationChannelDeterminationServiceTest : StringSpec({
     val classUnderTest = WeatherCommunicationChannelDeterminationService()
@@ -53,4 +51,4 @@ internal class WeatherCommunicationChannelDeterminationServiceTest : StringSpec(
 data class TestWeatherDetail(
     override val temperature: Double,
     override val weatherCondition: WeatherCondition
-): WeatherDetail
+) : WeatherDetail

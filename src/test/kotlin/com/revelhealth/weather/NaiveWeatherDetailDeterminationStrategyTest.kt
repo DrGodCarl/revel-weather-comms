@@ -62,7 +62,9 @@ private fun weatherDataForCondition(weather: String) = WeatherData(
     main = MainDetails(
         temp = 10.0
     ),
-    weather = listOf(WeatherDetails(
-        main = weather
-    ))
+    weather = listOf(
+        WeatherDetails(
+            main = weather
+        )
+    )
 )
